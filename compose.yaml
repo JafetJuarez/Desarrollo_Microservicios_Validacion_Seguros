@@ -1,0 +1,26 @@
+services:
+  consulta-seguros:
+    build:
+      context: ./mso-es-consulta-seguros-v1
+    container_name: mso-es-consulta-seguros
+    ports:
+      - "8081:8081"
+    networks:
+      - red-seguros
+
+  validaciones:
+    build:
+      context: ./mso-ts-validaciones-v1
+    container_name: mso-ts-validaciones
+    ports:
+      - "8082:8082"
+    environment:
+      SEGUROS_CONSULTA_URL: http://consulta-seguros:8081
+    depends_on:
+      - consulta-seguros
+    networks:
+      - red-seguros
+
+networks:
+  red-seguros:
+    driver: bridge
